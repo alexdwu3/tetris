@@ -1,18 +1,29 @@
-#grid {
-    width: 200px;
-    height: 400px;
+.grid {
+    width: 250px;
+    height: 500px;
     display: flex;
     flex-wrap: wrap;
     background-color: #171738;
 }
 
-#grid div {
-    width: 20px;
-    height: 20px;
-    background-color: #8ef9f3;
-    /* 
-    figure out how to add a border
-    border-width:0.3px;
+.grid div {
+    width: 25px;
+    height: 25px;
+    /* border-width:0.3px;
     border-style: solid;
     border-color: black; */
+}
+
+#scoreboard {
+    font-family: "Droid Sans"; 
+}
+
+#start-button {
+    margin-bottom: 20px;
+    font-family: "Droid Sans"; 
+    font-size: 14px;
+}
+
+.piece {
+    background-color: #8ef9f3;
 }
