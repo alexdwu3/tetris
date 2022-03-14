@@ -2,17 +2,20 @@ document.addEventListener('DOMContentLoaded', () => {
     const GRID_WIDTH = 10;
     const GRID_HEIGHT = 20;
     const GRID_SIZE = GRID_HEIGHT * GRID_WIDTH;
+    const FALL_SPEED = 1000 // in ms;
 
+    const grid = createGrid()
     // add GRID_SIZE boxes to grid
-    const grid = document.querySelector('.grid')
-    const toAdd = document.createDocumentFragment();
-    for(let i = 0; i < GRID_SIZE; i++) {
-        const newDiv = document.createElement('div');
-        toAdd.appendChild(newDiv);
+    function createGrid() {
+        const grid = document.querySelector('.grid')
+        for(let i = 0; i < GRID_SIZE; i++) {
+            const cell = document.createElement('div');
+            grid.appendChild(cell);
+        }
+        return grid
     }
-    grid.appendChild(toAdd);
 
-    let squares = Array.from(document.querySelectorAll('.grid div')); // assign div boxes to an array
+    let squares = Array.from(grid.querySelectorAll('div')); // assign div boxes to an array
     const ScoreDisplay = document.querySelector('#score');
     const StartButton = document.querySelector('#start-button');
 
@@ -72,10 +75,14 @@ document.addEventListener('DOMContentLoaded', () => {
 
     let currentPosition = 3; // position of piece
 
+    function getRandPiece(currentRotation) {
+        let rand = Math.floor(Math.random() * pieces.length); // picks random 0-5
+
+        return pieces[rand][currentRotation];
+    }
     // pick first piece randomly
     let currentRotation = 0; // 0 - 3 rotations
-    let randPiece = Math.floor(Math.random() * pieces.length); // picks random 0-5
-    let currentPiece = pieces[randPiece][currentRotation];
+    let currentPiece = getRandPiece(currentRotation)
 
     // draw the piece by giving each of the 4 boxes that the piece occupies the "piece" class, which
     // gives them the appropriate styling to indicate that it is a tetris piece
@@ -97,12 +104,10 @@ document.addEventListener('DOMContentLoaded', () => {
         currentPosition += GRID_WIDTH;
         drawPiece();
     }
-    let fallSpeed = 800 // ms;
-    fall = setInterval(movePieceDown, fallSpeed);
+    fall = setInterval(movePieceDown, FALL_SPEED);
     console.log("hi")
 
     // setInterval(); // speed that piece falls down
-
 
 
     drawPiece();
