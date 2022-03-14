@@ -1,11 +1,12 @@
 document.addEventListener('DOMContentLoaded', () => {
     const GRID_WIDTH = 10;
     const GRID_HEIGHT = 20;
+    const GRID_SIZE = GRID_HEIGHT * GRID_WIDTH;
 
-    // add 200 boxes to grid
+    // add GRID_SIZE boxes to grid
     const grid = document.querySelector('.grid')
     const toAdd = document.createDocumentFragment();
-    for(let i = 0; i < 200; i++) {
+    for(let i = 0; i < GRID_SIZE; i++) {
         const newDiv = document.createElement('div');
         toAdd.appendChild(newDiv);
     }
@@ -83,13 +84,27 @@ document.addEventListener('DOMContentLoaded', () => {
             squares[currentPosition + i].classList.add('piece') // add piece styling
         });
     }
-    drawPiece();
-
 
     function erasePiece() {
         currentPiece.forEach(i => {
             squares[currentPosition + i].classList.remove('piece') // add piece styling
         });
     }
+
+    function movePieceDown() { // redraw piece one row down
+        console.log(currentPosition)
+        erasePiece();
+        currentPosition += GRID_WIDTH;
+        drawPiece();
+    }
+    let fallSpeed = 800 // ms;
+    fall = setInterval(movePieceDown, fallSpeed);
+    console.log("hi")
+
+    // setInterval(); // speed that piece falls down
+
+
+
+    drawPiece();
 }) // this fires when index.html has been completely loaded 
 
