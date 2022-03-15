@@ -2,24 +2,32 @@ document.addEventListener('DOMContentLoaded', () => {
     const GRID_WIDTH = 10;
     const GRID_HEIGHT = 20;
     const GRID_SIZE = GRID_HEIGHT * GRID_WIDTH;
-    const FALL_SPEED = 1000 // in ms;
+    const FALL_SPEED = 100; // in ms;
 
-    const grid = createGrid()
+    const grid = createGrid();
     // add GRID_SIZE boxes to grid
     function createGrid() {
         const grid = document.querySelector('.grid')
+        // main grid
         for(let i = 0; i < GRID_SIZE; i++) {
             const cell = document.createElement('div');
             grid.appendChild(cell);
         }
-        return grid
+
+        // invisible base layer beneath grid
+        for(let i = 0; i < GRID_WIDTH; i++) {
+            const illegalCell = document.createElement('div');
+            illegalCell.classList.add('illegal')
+            grid.appendChild(illegalCell);
+        }
+        return grid;
     }
 
-    let squares = Array.from(grid.querySelectorAll('div')); // assign div boxes to an array
+    let cells = Array.from(grid.querySelectorAll('div')); // assign div boxes to an array
     const ScoreDisplay = document.querySelector('#score');
     const StartButton = document.querySelector('#start-button');
 
-    // the following piece configurations have 4 numbers representing the 4 boxes in array "squares"
+    // the following piece configurations have 4 numbers representing the 4 boxes in array "cells"
     // that we want to style so that they represent the correct tetris piece
     // piece configurations: see https://static.wikia.nocookie.net/tetrisconcept/images/3/3d/SRS-pieces.png/revision/latest/scale-to-width-down/336?cb=20060626173148
     const barPiece = [
@@ -71,6 +79,7 @@ document.addEventListener('DOMContentLoaded', () => {
         [GRID_WIDTH, GRID_WIDTH + 1, 1, GRID_WIDTH * 2 + 1]
     ];
 
+    // pieces stores 7 piece configs, each piece config has 
     const pieces = [barPiece, blueLPiece, orangeLPiece, boxPiece, greenZPiece, redZPiece, tPiece];
 
     let currentPosition = 3; // position of piece
@@ -88,28 +97,38 @@ document.addEventListener('DOMContentLoaded', () => {
     // gives them the appropriate styling to indicate that it is a tetris piece
     function drawPiece() {
         currentPiece.forEach(i => {
-            squares[currentPosition + i].classList.add('piece') // add piece styling
+            cells[currentPosition + i].classList.add('pieceCell') // add piece styling
         });
     }
 
     function erasePiece() {
         currentPiece.forEach(i => {
-            squares[currentPosition + i].classList.remove('piece') // add piece styling
+            cells[currentPosition + i].classList.remove('pieceCell') // add piece styling
         });
     }
 
-    function movePieceDown() { // redraw piece one row down
-        console.log(currentPosition)
-        erasePiece();
-        currentPosition += GRID_WIDTH;
-        drawPiece();
-    }
     fall = setInterval(movePieceDown, FALL_SPEED);
     console.log("hi")
 
-    // setInterval(); // speed that piece falls down
+    function movePieceDown() { // redraw piece one row down
+        erasePiece();
+        currentPosition += GRID_WIDTH;
+        drawPiece();
+        suspendPiece();
+    }
 
 
+    function suspendPiece() {
+        // if any of the cells of current piece sit directly above the bottom of the grid
+        // or another piece, 
+        if(currentPiece.some(i => cells[currentPosition + i + GRID_WIDTH].classList.contains('illegal'))) {
+            currentPiece.forEach(i => cells[currentPosition + i].classList.add('illegal'));
+            currentPiece = getRandPiece(currentRotation);
+            currentPosition = 3;
+            drawPiece();
+        };
+
+    }
     drawPiece();
 }) // this fires when index.html has been completely loaded 
 
