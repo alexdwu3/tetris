@@ -1,14 +1,14 @@
 .grid {
-    width: 250px;
-    height: 500px;
+    width: 350px;
+    height: 700px;
     display: flex;
     flex-wrap: wrap;
     background-color: #171738;
 }
 
 .grid div {
-    width: 25px;
-    height: 25px;
+    width: 35px;
+    height: 35px;
     /* border-width:0.3px;
     border-style: solid;
     border-color: black; */
@@ -19,9 +19,11 @@
 }
 
 #start-button {
-    margin-bottom: 20px;
+    height: 50px;
+    width: 175px;
+    margin-bottom: 40px;
     font-family: "PT Sans"; 
-    font-size: 14px;
+    font-size: 18px;
 }
 
 .pieceCell {

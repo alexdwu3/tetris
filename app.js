@@ -2,7 +2,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const GRID_WIDTH = 10;
     const GRID_HEIGHT = 20;
     const GRID_SIZE = GRID_HEIGHT * GRID_WIDTH;
-    const FALL_SPEED = 500; // in ms;
+    const FALL_SPEED = 800; // in ms;
     let fall = null; // set to null when stuff is not falling, use setInterval 
     let started = false; // has the game started yet?
     let lastDownPress; // stores last time it was pressed
@@ -140,7 +140,6 @@ document.addEventListener('DOMContentLoaded', () => {
         }
         if (!started)
             return;
-
         erasePiece();
 
         // check if any of the cells in the piece are at 0, 10, etc (assuming width is 10)
@@ -205,11 +204,13 @@ document.addEventListener('DOMContentLoaded', () => {
             drawPiece(); 
             fall = setInterval(movePieceDown, FALL_SPEED);
             started = true;
+            startButton.innerHTML = "Pause";
             // change text of start to be pause
         }
         else {
             clearInterval(fall);
             fall = null;
+            startButton.innerHTML = "Resume";
             // change text to start, maybe have an overlay that says paused
         }
     })
