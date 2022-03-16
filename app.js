@@ -2,7 +2,10 @@ document.addEventListener('DOMContentLoaded', () => {
     const GRID_WIDTH = 10;
     const GRID_HEIGHT = 20;
     const GRID_SIZE = GRID_HEIGHT * GRID_WIDTH;
-    const FALL_SPEED = 100; // in ms;
+    const FALL_SPEED = 500; // in ms;
+    let fall = null; // set to null when stuff is not falling, use setInterval 
+    let started = false; // has the game started yet?
+    let lastDownPress; // stores last time it was pressed
 
     const grid = createGrid();
     // add GRID_SIZE boxes to grid
@@ -21,11 +24,12 @@ document.addEventListener('DOMContentLoaded', () => {
             grid.appendChild(illegalCell);
         }
         return grid;
+        
     }
 
     let cells = Array.from(grid.querySelectorAll('div')); // assign div boxes to an array
-    const ScoreDisplay = document.querySelector('#score');
-    const StartButton = document.querySelector('#start-button');
+    const scoreDisplay = document.querySelector('#score');
+    const startButton = document.querySelector('#start-button');
 
     // the following piece configurations have 4 numbers representing the 4 boxes in array "cells"
     // that we want to style so that they represent the correct tetris piece
@@ -86,7 +90,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     function getRandPiece(currentRotation) {
         let rand = Math.floor(Math.random() * pieces.length); // picks random 0-5
-
+        currentPosition = 3; // center new piece
         return pieces[rand][currentRotation];
     }
     // pick first piece randomly
@@ -107,9 +111,6 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
-    fall = setInterval(movePieceDown, FALL_SPEED);
-    console.log("hi")
-
     function movePieceDown() { // redraw piece one row down
         erasePiece();
         currentPosition += GRID_WIDTH;
@@ -121,14 +122,98 @@ document.addEventListener('DOMContentLoaded', () => {
     function suspendPiece() {
         // if any of the cells of current piece sit directly above the bottom of the grid
         // or another piece, 
+        // here, currentposition acts like an offset, while i provides the cell's value
         if(currentPiece.some(i => cells[currentPosition + i + GRID_WIDTH].classList.contains('illegal'))) {
             currentPiece.forEach(i => cells[currentPosition + i].classList.add('illegal'));
             currentPiece = getRandPiece(currentRotation);
-            currentPosition = 3;
             drawPiece();
-        };
+        }
+    }
+
+    // piece movement
+
+    function moveLeft() {
+        if(currentPiece.some(i => cells[currentPosition + i - 1].classList.contains('illegal'))) {
+            console.log("collided with illegal");
+            suspendPiece();
+            return;
+        }
+        if (!started)
+            return;
+
+        erasePiece();
+
+        // check if any of the cells in the piece are at 0, 10, etc (assuming width is 10)
+        const atleftBoundary = currentPiece.some(i => (currentPosition + i) % GRID_WIDTH === 0);
+        if (!atleftBoundary) {
+            currentPosition -= 1;
+        }
+        drawPiece();
+    }
+
+    function moveRight() {
+        if(currentPiece.some(i => cells[currentPosition + i + 1].classList.contains('illegal'))) {
+            console.log("collided with illegal");
+            suspendPiece();
+            return;
+        }
+        if (!started)
+            return;
+
+        erasePiece();
+
+        // check if any of the cells in the piece are at 0, 10, etc (assuming width is 10)
+        const atRightBoundary = currentPiece.some(i => (currentPosition + i) % GRID_WIDTH === GRID_WIDTH - 1);
+        if (!atRightBoundary) {
+            currentPosition += 1;
+        }
+        drawPiece();
+    }
+
+    function moveDown() {
+        if(currentPiece.some(i => cells[currentPosition + i].classList.contains('illegal'))) {
+            return;
+        }
+        if (!started)
+            return;
+        if (lastDownPress && (Date.now() - lastDownPress < 30)) {
+            return;
+        }
+        erasePiece();
+
+        // check if any of the cells in the piece are at 0, 10, etc (assuming width is 10)
+        if(!currentPiece.some(i => cells[currentPosition + i + GRID_WIDTH].classList.contains('illegal'))) {
+            movePieceDown();
+        }
+        drawPiece();
+        lastDownPress = Date.now();
+        console.log(lastDownPress);
+    }
+
+    function keypressConfig(keypress) {
+        if (keypress.keyCode === 37)
+            moveLeft();
+        if (keypress.keyCode === 39)
+            moveRight();
+        if (keypress.keyCode === 40)
+            moveDown();
 
     }
-    drawPiece();
+
+    startButton.addEventListener('click', () => {
+        if(!fall) {
+            drawPiece(); 
+            fall = setInterval(movePieceDown, FALL_SPEED);
+            started = true;
+            // change text of start to be pause
+        }
+        else {
+            clearInterval(fall);
+            fall = null;
+            // change text to start, maybe have an overlay that says paused
+        }
+    })
+    document.addEventListener('keydown', keypressConfig);
+
 }) // this fires when index.html has been completely loaded 
 
