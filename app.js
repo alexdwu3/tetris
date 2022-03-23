@@ -7,6 +7,8 @@ document.addEventListener('DOMContentLoaded', () => {
     let started = false; // has the game started yet?
     let lastDownPress; // stores last time it was pressed
 
+
+
     const grid = createGrid();
     // add GRID_SIZE boxes to grid
     function createGrid() {
@@ -31,6 +33,17 @@ document.addEventListener('DOMContentLoaded', () => {
     const scoreDisplay = document.querySelector('#score');
     const startButton = document.querySelector('#start-button');
 
+
+    const colors = [
+        'url(cellStyles/blue_cell.png)',
+        'url(cellStyles/navy_cell.png)',
+        'url(cellStyles/peach_cell.png)',
+        'url(cellStyles/yellow_cell.png)',
+        'url(cellStyles/green_cell.png)',
+        'url(cellStyles/purple_cell.png)',
+        'url(cellStyles/pink_cell.png)',
+    ]
+    
     // the following piece configurations have 4 numbers representing the 4 boxes in array "cells"
     // that we want to style so that they represent the correct tetris piece
     // piece configurations: see https://static.wikia.nocookie.net/tetrisconcept/images/3/3d/SRS-pieces.png/revision/latest/scale-to-width-down/336?cb=20060626173148
@@ -88,26 +101,28 @@ document.addEventListener('DOMContentLoaded', () => {
 
     let currentPosition = 3; // position of piece
 
-    function getRandPiece(currentRotation) {
-        let rand = Math.floor(Math.random() * pieces.length); // picks random 0-5
-        currentPosition = 3; // center new piece
-        return pieces[rand][currentRotation];
-    }
+    
+
     // pick first piece randomly
+    let rand = Math.floor(Math.random() * pieces.length); // picks random 0-5
+    currentPosition = 3; // center new piece at position 3
     let currentRotation = 0; // 0 - 3 rotations
-    let currentPiece = getRandPiece(currentRotation)
+    let currentPiece = pieces[rand][currentRotation]
+    let currentColor = colors[rand]
+
 
     // draw the piece by giving each of the 4 boxes that the piece occupies the "piece" class, which
     // gives them the appropriate styling to indicate that it is a tetris piece
     function drawPiece() {
+        console.log(currentColor);
         currentPiece.forEach(i => {
-            cells[currentPosition + i].classList.add('pieceCell') // add piece styling
+            cells[currentPosition + i].style.backgroundImage = currentColor
         });
     }
 
     function erasePiece() {
         currentPiece.forEach(i => {
-            cells[currentPosition + i].classList.remove('pieceCell') // add piece styling
+            cells[currentPosition + i].style.backgroundImage = 'none'
         });
     }
 
@@ -125,7 +140,11 @@ document.addEventListener('DOMContentLoaded', () => {
         // here, currentposition acts like an offset, while i provides the cell's value
         if(currentPiece.some(i => cells[currentPosition + i + GRID_WIDTH].classList.contains('illegal'))) {
             currentPiece.forEach(i => cells[currentPosition + i].classList.add('illegal'));
-            currentPiece = getRandPiece(currentRotation);
+            rand = Math.floor(Math.random() * pieces.length); // picks random 0-5
+            currentPosition = 3; // center new piece at position 3
+            currentRotation = 0; // 0 - 3 rotations
+            currentPiece = pieces[rand][currentRotation];
+            currentColor = colors[rand];
             drawPiece();
         }
     }
