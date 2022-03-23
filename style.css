@@ -1,27 +1,43 @@
+#wrapper {
+    display:flex;
+    flex-direction:row;
+    justify-content: center;
+    align-items: center;
+    padding: 20px;
+    font-family: "PT Sans"; 
+}
+
+#scoreboard {
+    margin-right: 25px;
+    font-size: 20px;
+}
+
+#wrapper div {
+    justify-self: center;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
 .grid {
     width: 200px;
     height: 400px;
     display: flex;
     flex-wrap: wrap;
-    background-color: #DBFFEC;
+    background-color: #3D4742;
+    border-radius: 3px;
 }
 
 .grid div {
     width: 20px;
     height: 20px;
-    /* border-width:0.3px;
-    border-style: solid;
-    border-color: black; */
 }
 
-#scoreboard {
-    font-family: "PT Sans"; 
-}
+
 
 #start-button {
+    justify-self: center;
     height: 30px;
-    width: 125px;
-    margin-bottom: 30px;
-    font-family: "PT Sans"; 
-    font-size: 18px;
+    width: 150px;
+    margin-bottom: 20px;
+    font-size: 15px;
 }
