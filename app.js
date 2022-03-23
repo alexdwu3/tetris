@@ -2,7 +2,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const GRID_WIDTH = 10;
     const GRID_HEIGHT = 20;
     const GRID_SIZE = GRID_HEIGHT * GRID_WIDTH;
-    const FALL_SPEED = 800; // in ms;
+    const FALL_SPEED = 1200; // in ms;
     let fall = null; // set to null when stuff is not falling, use setInterval 
     let started = false; // has the game started yet?
     let lastDownPress; // stores last time it was pressed
@@ -49,9 +49,9 @@ document.addEventListener('DOMContentLoaded', () => {
     // piece configurations: see https://static.wikia.nocookie.net/tetrisconcept/images/3/3d/SRS-pieces.png/revision/latest/scale-to-width-down/336?cb=20060626173148
     const barPiece = [
         [GRID_WIDTH + 0, GRID_WIDTH + 1, GRID_WIDTH + 2, GRID_WIDTH + 3],
-        [GRID_WIDTH * 2 + 0, GRID_WIDTH * 2 + 1, GRID_WIDTH * 2 + 2, GRID_WIDTH * 2 + 3],
-        [1, GRID_WIDTH + 1, GRID_WIDTH * 2 + 1, GRID_WIDTH * 3 + 1],
         [2, GRID_WIDTH + 2, GRID_WIDTH * 2 + 2, GRID_WIDTH * 3 + 2],
+        [GRID_WIDTH * 2 + 0, GRID_WIDTH * 2 + 1, GRID_WIDTH * 2 + 2, GRID_WIDTH * 2 + 3],
+        [1, GRID_WIDTH + 1, GRID_WIDTH * 2 + 1, GRID_WIDTH * 3 + 1]
     ];
 
     const blueLPiece = [
@@ -101,20 +101,17 @@ document.addEventListener('DOMContentLoaded', () => {
 
     let currentPosition = 3; // position of piece
 
-    
-
     // pick first piece randomly
     let rand = Math.floor(Math.random() * pieces.length); // picks random 0-5
     currentPosition = 3; // center new piece at position 3
     let currentRotation = 0; // 0 - 3 rotations
-    let currentPiece = pieces[rand][currentRotation]
-    let currentColor = colors[rand]
+    let currentPiece = pieces[rand][currentRotation];
+    let currentColor = colors[rand];
 
 
     // draw the piece by giving each of the 4 boxes that the piece occupies the "piece" class, which
     // gives them the appropriate styling to indicate that it is a tetris piece
     function drawPiece() {
-        console.log(currentColor);
         currentPiece.forEach(i => {
             cells[currentPosition + i].style.backgroundImage = currentColor
         });
@@ -208,15 +205,37 @@ document.addEventListener('DOMContentLoaded', () => {
         console.log(lastDownPress);
     }
 
+    function rotate(direction) {
+        if (direction == 'clockwise') { // clockwise
+            erasePiece();
+            currentRotation = myModulo(currentRotation - 1, 4);
+            console.log(currentRotation);   
+            currentPiece = pieces[rand][currentRotation]
+            drawPiece();
+        }
+        else { // counterCockwise
+            erasePiece();
+            currentRotation = myModulo(currentRotation + 1, 4);
+            currentPiece = pieces[rand][currentRotation]
+            drawPiece();
+        }
+    }
+
     function keypressConfig(keypress) {
+        console.log(keypress);
         if (keypress.keyCode === 37)
             moveLeft();
         if (keypress.keyCode === 39)
             moveRight();
         if (keypress.keyCode === 40)
             moveDown();
+        if (keypress.keyCode === 90)
+            rotate('counterclockwise');
+        if (keypress.keyCode === 38 || keypress.keyCode === 88)
+            rotate('clockwise'); 
 
     }
+    
 
     startButton.addEventListener('click', () => {
         if(!fall) {
@@ -235,5 +254,8 @@ document.addEventListener('DOMContentLoaded', () => {
     })
     document.addEventListener('keydown', keypressConfig);
 
+    function myModulo(n, m) { // modulo doesn't recognize negative numbers
+        return ((n % m) + m) % m;
+      }
 }) // this fires when index.html has been completely loaded 
 
