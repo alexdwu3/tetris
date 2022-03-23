@@ -2,7 +2,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const GRID_WIDTH = 10;
     const GRID_HEIGHT = 20;
     const GRID_SIZE = GRID_HEIGHT * GRID_WIDTH;
-    const FALL_SPEED = 1200; // in ms;
+    const FALL_SPEED = 1000000; // in ms;
     let fall = null; // set to null when stuff is not falling, use setInterval 
     let started = false; // has the game started yet?
     let lastDownPress; // stores last time it was pressed
@@ -56,13 +56,13 @@ document.addEventListener('DOMContentLoaded', () => {
 
     const blueLPiece = [
         [0, GRID_WIDTH, GRID_WIDTH + 1, GRID_WIDTH + 2],
-        [1, 2, GRID_WIDTH + 1, GRID_WIDTH*2 + 1],
+        [1, 2, GRID_WIDTH + 1, GRID_WIDTH * 2 + 1],
         [GRID_WIDTH, GRID_WIDTH + 1, GRID_WIDTH + 2, GRID_WIDTH * 2 + 2],
-        [1, GRID_WIDTH + 1, GRID_WIDTH * 2 + 1, GRID_WIDTH],
+        [1, GRID_WIDTH + 1, GRID_WIDTH * 2 + 1, GRID_WIDTH * 2],
     ];
 
     const orangeLPiece = [
-        [2, GRID_WIDTH, GRID_WIDTH + 1, GRID_WIDTH + 2],
+        [GRID_WIDTH, GRID_WIDTH + 1, GRID_WIDTH + 2, 2],
         [1, GRID_WIDTH + 1, GRID_WIDTH * 2 + 1, GRID_WIDTH * 2 + 2],
         [GRID_WIDTH * 2, GRID_WIDTH * 1, GRID_WIDTH * 1 + 1, GRID_WIDTH * 1 + 2],
         [0, 1, GRID_WIDTH + 1, GRID_WIDTH * 2 + 1],
@@ -208,14 +208,14 @@ document.addEventListener('DOMContentLoaded', () => {
     function rotate(direction) {
         if (direction == 'clockwise') { // clockwise
             erasePiece();
-            currentRotation = myModulo(currentRotation - 1, 4);
+            currentRotation = myModulo(currentRotation + 1, 4);
             console.log(currentRotation);   
             currentPiece = pieces[rand][currentRotation]
             drawPiece();
         }
         else { // counterCockwise
             erasePiece();
-            currentRotation = myModulo(currentRotation + 1, 4);
+            currentRotation = myModulo(currentRotation - 1, 4);
             currentPiece = pieces[rand][currentRotation]
             drawPiece();
         }
