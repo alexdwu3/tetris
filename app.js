@@ -99,33 +99,32 @@ document.addEventListener('DOMContentLoaded', () => {
     // pieces stores 7 piece configs, each piece config has 
     const pieces = [barPiece, blueLPiece, orangeLPiece, boxPiece, greenZPiece, redZPiece, tPiece];
 
-    let currentPosition = 3; // position of piece
+    let currentPosition = 3; // set position of piece to 3rd column
 
-    // pick first piece randomly
-    let rand = Math.floor(Math.random() * pieces.length); // picks random 0-5
-    currentPosition = 3; // center new piece at position 3
-    let currentRotation = 0; // 0 - 3 rotations
+    let rand = Math.floor(Math.random() * pieces.length); // picks random piece
+    let currentRotation = 0; // set piece to first rotation position
     let currentPiece = pieces[rand][currentRotation];
-    let currentColor = colors[rand];
+    let currentColor = colors[rand]; // color of current piece
 
 
-    // draw the piece by giving each of the 4 boxes that the piece occupies the "piece" class, which
+    // draw the piece by giving each of the 4 cells that the piece occupies the "piece" class, which
     // gives them the appropriate styling to indicate that it is a tetris piece
     function drawPiece() {
-        currentPiece.forEach(i => {
-            cells[currentPosition + i].style.backgroundImage = currentColor
+        currentPiece.forEach(i => {c
+            cells[currentPosition + i].style.backgroundImage = currentColor;
         });
     }
 
+    // erase piece by removing style from all of the cells 
     function erasePiece() {
         currentPiece.forEach(i => {
-            cells[currentPosition + i].style.backgroundImage = 'none'
+            cells[currentPosition + i].style.backgroundImage = 'none';
         });
     }
 
     function movePieceDown() { // redraw piece one row down
         erasePiece();
-        currentPosition += GRID_WIDTH;
+        currentPosition += GRID_WIDTH; // move position down by a row
         drawPiece();
         checkPiece();
     }
@@ -141,12 +140,11 @@ document.addEventListener('DOMContentLoaded', () => {
         // CALL CHECKPIECE WITH A DIFFERENT MODE, REWRITE CHECKPIECE WITH NEW PIECE MEtHOD
     }
 
-
+    // check validity of a piece
+    // if any of the cells of current piece sit directly above the bottom of the grid or a frozen piece,
+        // current piece becomes frozen and we generate a new piece
+    // here, currentposition acts like an offset, while i provides the cell's value
     function checkPiece() {
-        // check validity of a piece
-        // if any of the cells of current piece sit directly above the bottom of the grid
-        // or another piece, 
-        // here, currentposition acts like an offset, while i provides the cell's value
         if(currentPiece.some(i => cells[currentPosition + i + GRID_WIDTH].classList.contains('illegal'))) {
             currentPiece.forEach(i => cells[currentPosition + i].classList.add('illegal'));
             rand = Math.floor(Math.random() * pieces.length); // picks random 0-5
@@ -156,10 +154,10 @@ document.addEventListener('DOMContentLoaded', () => {
             currentColor = colors[rand];
             drawPiece();
         }
+        // fix the redundancy of creating a piece here
     }
 
-    // piece movement
-
+    // move current piece left
     function moveLeft() {
         if(currentPiece.some(i => cells[currentPosition + i - 1].classList.contains('illegal'))) {
             console.log("collided with illegal");
@@ -170,7 +168,7 @@ document.addEventListener('DOMContentLoaded', () => {
             return;
         erasePiece();
 
-        // check if any of the cells in the piece are at 0, 10, etc (assuming width is 10)
+        // check if any of the cells in the piece are at the left boundary (at 0, 10, etc (assuming width is 10))
         const atleftBoundary = currentPiece.some(i => (currentPosition + i) % GRID_WIDTH === 0);
         if (!atleftBoundary) {
             currentPosition -= 1;
@@ -178,6 +176,7 @@ document.addEventListener('DOMContentLoaded', () => {
         drawPiece();
     }
 
+    // move current piece right
     function moveRight() {
         if(currentPiece.some(i => cells[currentPosition + i + 1].classList.contains('illegal'))) {
             console.log("collided with illegal");
@@ -197,6 +196,7 @@ document.addEventListener('DOMContentLoaded', () => {
         drawPiece();
     }
 
+    // move current piece down
     function moveDown() {
         if(currentPiece.some(i => cells[currentPosition + i].classList.contains('illegal'))) {
             return;
@@ -225,7 +225,7 @@ document.addEventListener('DOMContentLoaded', () => {
             currentPiece = pieces[rand][currentRotation]
             drawPiece();
         }
-        else { // counterCockwise
+        else { // countercockwise
             erasePiece();
             currentRotation = myModulo(currentRotation - 1, 4);
             currentPiece = pieces[rand][currentRotation]
@@ -233,6 +233,7 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     }
 
+    // direct traffic of keypresses to trigger correct methods
     function keypressConfig(keypress) {
         console.log(keypress);
         if (keypress.keyCode === 37)
@@ -266,10 +267,13 @@ document.addEventListener('DOMContentLoaded', () => {
             // maybe have an overlay/menu displayed on the screen that says paused
         }
     })
+
+    // any keypress (keydown) is passed into keypressConfig
     document.addEventListener('keydown', keypressConfig);
 
-    function myModulo(n, m) { // modulo doesn't recognize negative numbers
+    // taken from stackoverflow, default modulo doesn't recognize negative numbers
+    function myModulo(n, m) { 
         return ((n % m) + m) % m;
-      }
-}) // this fires when index.html has been completely loaded 
+    }
+}) 
 
