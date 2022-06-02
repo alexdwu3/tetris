@@ -3,14 +3,17 @@
     <head>
         <script src="app.js"></script>
         <link rel="stylesheet" href="style.css"></link>
+        <link rel="preconnect" href="https://fonts.googleapis.com">
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet"> 
         <title>Tetris</title>
     </head>
     <body id="screen">
         <div id="scoreboard">
-            <h4>Score: <span id="score"></span></h4>
-            <h4>Level: <span id="score"></span></h4>
+            <h4>Score: <span></span></h4>
+            <h4>Level: <span></span></h4>
         </div>
-        <div>
+        <div id="gameboard">
             <button id="start-button">Start</button>
             <div>
                 <div style="flex-direction: row;"class="grid"></div>

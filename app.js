@@ -29,7 +29,7 @@ document.addEventListener('DOMContentLoaded', () => {
         
     }
 
-    let cells = Array.from(grid.querySelectorAll('div')); // assign div boxes to an array
+    let cells = Array.from(grid.querySelectorAll('div')); // assign div boxes to an array (cells)
     const scoreDisplay = document.querySelector('#score');
     const startButton = document.querySelector('#start-button');
 

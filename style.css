@@ -1,15 +1,16 @@
+
 #screen {
     display:flex;
     flex-direction:row;
     justify-content: center;
     align-items: center;
-    font-family: "PT Sans"; 
+    font-family: 'Press Start 2P', cursive;
     background: linear-gradient(45deg, #80ffdb59, #c2f4f4, #8ed5ea);
     /* background: linear-gradient(-45deg, #ee7752, #e73c7e, #23a6d5, #23d5ab); */
     height: 100%;
     width: 100%;
     margin: auto;
-    margin-top: 5px;
+    margin-top: 65px;
     padding-bottom: 50px;
     background-size: 400% 400%;
     animation: gradient 60s ease infinite;
@@ -33,10 +34,14 @@
 
 #scoreboard {
     margin-right: 25px;
-    font-size: 20px;
+    font-size: 14px;
 }
 
-#screen div {
+#score {
+    margin-top:25px;
+}
+
+#gameboard {
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -60,19 +65,20 @@
 
 
 #start-button {
-    margin-bottom: 10px;
+    margin-bottom: 15px;
     appearance: none;
-    background-color: #FAFBFC;
+    background-color: #F67E04;
     border: 1px solid rgba(27, 31, 35, 0.15);
-    border-radius: 4px;
-    /* box-shadow: rgba(27, 31, 35, 0.04) 0 1px 0, rgba(255, 255, 255, 0.25) 0 1px 0 inset; */
-    /* box-sizing: border-box; */
-    color: #24292E;
+    border-radius: 2px;
+    box-shadow: rgba(27, 31, 35, 0.04) 0 1px 0, rgba(255, 255, 255, 0.25) 0 1px 0 inset;
+    box-sizing: border-box;
+    color: black;
     cursor: pointer;
     /* display: inline-block; */
-    font-family: -apple-system, system-ui, "Segoe UI", Helvetica, Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji";
-    font-size: 17px;
-    font-weight: 500;
+    font-family: 'Press Start 2P';
+    /* font-family: -apple-system, system-ui, "Segoe UI", Helvetica, Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji"; */
+    font-size: 16px;
+    /* font-weight: 500; */
     line-height: 28px;
     list-style: none;
     padding: 6px 16px;
@@ -89,7 +95,7 @@
 }
 
 #start-button:hover {
-    background-color: #F3F4F6;
+    background-color: #C67615;
     text-decoration: none;
     transition-duration: 0.1s;
 }
