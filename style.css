@@ -1,10 +1,10 @@
-#wrapper {
+#screen {
     display:flex;
     flex-direction:row;
     justify-content: center;
     align-items: center;
     font-family: "PT Sans"; 
-    background: linear-gradient(45deg, #80FFDB, #64DFDF, #48BFE3);
+    background: linear-gradient(45deg, #80ffdb59, #c2f4f4, #8ed5ea);
     /* background: linear-gradient(-45deg, #ee7752, #e73c7e, #23a6d5, #23d5ab); */
     height: 100%;
     width: 100%;
@@ -12,7 +12,9 @@
     margin-top: 5px;
     padding-bottom: 50px;
     background-size: 400% 400%;
-    animation: gradient 45s ease infinite;
+    animation: gradient 60s ease infinite;
+
+    /* styles for the entire screen*/
 }
 
 @keyframes gradient {
@@ -25,6 +27,8 @@
     100% {
         background-position: 0% 50%;
     }
+
+    /* shifting gradient code from stack overflow */
 }
 
 #scoreboard {
@@ -32,12 +36,12 @@
     font-size: 20px;
 }
 
-#wrapper div {
-    justify-self: center;
+#screen div {
     display: flex;
     flex-direction: column;
     align-items: center;
 }
+
 .grid {
     width: 200px;
     height: 400px;
@@ -48,7 +52,7 @@
     border: 1.5px solid rgba(218, 120, 189, 0.53);
 }
 
-.grid div {
+.grid div { /* cells */
     width: 20px;
     height: 20px;
 }
@@ -80,6 +84,8 @@
     vertical-align: middle;
     white-space: nowrap;
     word-wrap: break-word;
+
+    /* copied button style from dribbble */
 }
 
 #start-button:hover {

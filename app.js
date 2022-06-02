@@ -2,24 +2,24 @@ document.addEventListener('DOMContentLoaded', () => {
     const GRID_WIDTH = 10;
     const GRID_HEIGHT = 20;
     const GRID_SIZE = GRID_HEIGHT * GRID_WIDTH;
-    const FALL_SPEED = 1000000; // in ms;
+    const FALL_SPEED = 300; // time to fall one row in ms;
     let fall = null; // set to null when stuff is not falling, use setInterval 
-    let started = false; // has the game started yet?
+    let started = false; // has the game started 
     let lastDownPress; // stores last time it was pressed
 
 
-
     const grid = createGrid();
+
     // add GRID_SIZE boxes to grid
     function createGrid() {
         const grid = document.querySelector('.grid')
-        // main grid
+
         for(let i = 0; i < GRID_SIZE; i++) {
             const cell = document.createElement('div');
             grid.appendChild(cell);
         }
 
-        // invisible base layer beneath grid
+        // illegal base layer of cells (to prevent cells from going under the board)
         for(let i = 0; i < GRID_WIDTH; i++) {
             const illegalCell = document.createElement('div');
             illegalCell.classList.add('illegal')
@@ -127,11 +127,23 @@ document.addEventListener('DOMContentLoaded', () => {
         erasePiece();
         currentPosition += GRID_WIDTH;
         drawPiece();
-        suspendPiece();
+        checkPiece();
+    }
+
+    function dropPiece() {
+        if (lastDownPress && (Date.now() - lastDownPress < 30)) {
+            return;
+        }
+        while(!currentPiece.some(i => cells[currentPosition + i + GRID_WIDTH].classList.contains('illegal'))) {
+            movePieceDown();
+        }
+        lastDownPress = Date.now();
+        // CALL CHECKPIECE WITH A DIFFERENT MODE, REWRITE CHECKPIECE WITH NEW PIECE MEtHOD
     }
 
 
-    function suspendPiece() {
+    function checkPiece() {
+        // check validity of a piece
         // if any of the cells of current piece sit directly above the bottom of the grid
         // or another piece, 
         // here, currentposition acts like an offset, while i provides the cell's value
@@ -151,7 +163,7 @@ document.addEventListener('DOMContentLoaded', () => {
     function moveLeft() {
         if(currentPiece.some(i => cells[currentPosition + i - 1].classList.contains('illegal'))) {
             console.log("collided with illegal");
-            suspendPiece();
+            checkPiece();
             return;
         }
         if (!started)
@@ -169,7 +181,7 @@ document.addEventListener('DOMContentLoaded', () => {
     function moveRight() {
         if(currentPiece.some(i => cells[currentPosition + i + 1].classList.contains('illegal'))) {
             console.log("collided with illegal");
-            suspendPiece();
+            checkPiece();
             return;
         }
         if (!started)
@@ -233,23 +245,25 @@ document.addEventListener('DOMContentLoaded', () => {
             rotate('counterclockwise');
         if (keypress.keyCode === 38 || keypress.keyCode === 88)
             rotate('clockwise'); 
-
+        if (keypress.keyCode === 32)
+            dropPiece();
     }
     
 
     startButton.addEventListener('click', () => {
+        // console.log(keypress);
         if(!fall) {
             drawPiece(); 
             fall = setInterval(movePieceDown, FALL_SPEED);
             started = true;
             startButton.innerHTML = "Pause";
-            // change text of start to be pause
+
         }
         else {
             clearInterval(fall);
             fall = null;
             startButton.innerHTML = "Resume";
-            // change text to start, maybe have an overlay that says paused
+            // maybe have an overlay/menu displayed on the screen that says paused
         }
     })
     document.addEventListener('keydown', keypressConfig);
