@@ -110,7 +110,7 @@ document.addEventListener('DOMContentLoaded', () => {
     // draw the piece by giving each of the 4 cells that the piece occupies the "piece" class, which
     // gives them the appropriate styling to indicate that it is a tetris piece
     function drawPiece() {
-        currentPiece.forEach(i => {c
+        currentPiece.forEach(i => {
             cells[currentPosition + i].style.backgroundImage = currentColor;
         });
     }
@@ -130,12 +130,21 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     function dropPiece() {
+        // don't want to accidentally hit space twice if someone just taps the space bar
         if (lastDownPress && (Date.now() - lastDownPress < 30)) {
             return;
         }
+
         while(!currentPiece.some(i => cells[currentPosition + i + GRID_WIDTH].classList.contains('illegal'))) {
-            movePieceDown();
+            // state: none of the cells in the current piece are illegal (frozen or not on board)
+            console.log("poop");
+            erasePiece();
+            currentPosition += GRID_WIDTH; // move position down by a row
+            drawPiece();
+            // need to check piece
         }
+        checkPiece();
+
         lastDownPress = Date.now();
         // CALL CHECKPIECE WITH A DIFFERENT MODE, REWRITE CHECKPIECE WITH NEW PIECE MEtHOD
     }
@@ -246,7 +255,7 @@ document.addEventListener('DOMContentLoaded', () => {
             rotate('counterclockwise');
         if (keypress.keyCode === 38 || keypress.keyCode === 88)
             rotate('clockwise'); 
-        if (keypress.keyCode === 32)
+        if (keypress.keyCode === 32 && started)
             dropPiece();
     }
     
