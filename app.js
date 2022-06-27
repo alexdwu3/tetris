@@ -2,7 +2,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const GRID_WIDTH = 10;
     const GRID_HEIGHT = 20;
     const GRID_SIZE = GRID_HEIGHT * GRID_WIDTH;
-    const FALL_SPEED = 300; // time to fall one row in ms;
+    const FALL_SPEED = 700; // time to fall one row in ms;
     let fall = null; // set to null when stuff is not falling, use setInterval 
     let started = false; // has the game started 
     let lastDownPress; // stores last time it was pressed
@@ -151,7 +151,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // check validity of a piece
     // if any of the cells of current piece sit directly above the bottom of the grid or a frozen piece,
-        // current piece becomes frozen and we generate a new piece
+    // current piece becomes frozen and we generate a new piece
     // here, currentposition acts like an offset, while i provides the cell's value
     function checkPiece() {
         if(currentPiece.some(i => cells[currentPosition + i + GRID_WIDTH].classList.contains('illegal'))) {
@@ -161,10 +161,24 @@ document.addEventListener('DOMContentLoaded', () => {
             currentRotation = 0; // 0 - 3 rotations
             currentPiece = pieces[rand][currentRotation];
             currentColor = colors[rand];
+            checkGameOver();
             drawPiece();
+
         }
         // fix the redundancy of creating a piece here
     }
+
+    function checkGameOver() {
+        if(currentPiece.some(i => cells[currentPosition + i].classList.contains('illegal'))) {
+            console.log("game over");
+            window.alert("GAME OVER");
+            // set score and level to 0 
+            clearInterval(fall);
+        }
+    }
+
+
+
 
     // move current piece left
     function moveLeft() {
