@@ -6,6 +6,11 @@ document.addEventListener('DOMContentLoaded', () => {
     let fall = null; // set to null when stuff is not falling, use setInterval 
     let started = false; // has the game started 
     let lastDownPress; // stores last time it was pressed
+    let score = 0;
+    let level = 1;
+    let scoreElement = document.querySelector('.score');
+    let levelElement = document.querySelector('.level');
+    let linesCleared = 0;
 
 
     const grid = createGrid();
@@ -30,7 +35,6 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     let cells = Array.from(grid.querySelectorAll('div')); // assign div boxes to an array (cells)
-    const scoreDisplay = document.querySelector('#score');
     const startButton = document.querySelector('#start-button');
 
 
@@ -137,7 +141,6 @@ document.addEventListener('DOMContentLoaded', () => {
 
         while(!currentPiece.some(i => cells[currentPosition + i + GRID_WIDTH].classList.contains('illegal'))) {
             // state: none of the cells in the current piece are illegal (frozen or not on board)
-            console.log("poop");
             erasePiece();
             currentPosition += GRID_WIDTH; // move position down by a row
             drawPiece();
@@ -161,11 +164,41 @@ document.addEventListener('DOMContentLoaded', () => {
             currentRotation = 0; // 0 - 3 rotations
             currentPiece = pieces[rand][currentRotation];
             currentColor = colors[rand];
+            checkLineClear();
             checkGameOver();
             drawPiece();
 
         }
         // fix the redundancy of creating a piece here
+    }
+
+    function checkLineClear() {
+        for (let i = 0; i < GRID_WIDTH * GRID_HEIGHT - 1; i += GRID_WIDTH) {
+            let row = [];
+            row.push(i);
+            for (let j = 1; j < GRID_WIDTH; j++) {
+                row.push(i+j);
+            }
+            if (row.every(i => cells[i].classList.contains('illegal'))) { // row is full, clear row
+                row.forEach(i => cells[i].classList.remove('illegal'));
+                row.forEach(i => cells[i].style.backgroundImage = 'none');
+                score += 100 * level;
+                linesCleared += 1;
+                scoreElement.innerHTML = "Score: " + score;
+                console.log("line clear #: " + linesCleared)
+
+                // removing squares
+                const rowToRemove = cells.splice(i, GRID_WIDTH);
+                cells = rowToRemove.concat(cells);
+                cells.forEach(cell => grid.appendChild(cell));
+            }
+        }  
+        if (linesCleared % 10 == 0 && linesCleared != 0) {
+            level += 1;
+            levelElement.innerHTML = "Level: " + level;
+        }         
+
+
     }
 
     function checkGameOver() {
