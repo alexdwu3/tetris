@@ -2,7 +2,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const GRID_WIDTH = 10;
     const GRID_HEIGHT = 20;
     const GRID_SIZE = GRID_HEIGHT * GRID_WIDTH;
-    const FALL_SPEED = 700; // time to fall one row in ms;
+    const FALL_SPEED = 1000; // time to fall one row in ms;
     let fall = null; // set to null when stuff is not falling, use setInterval 
     let started = false; // has the game started 
     let lastDownPress; // stores last time it was pressed
@@ -167,9 +167,7 @@ document.addEventListener('DOMContentLoaded', () => {
             checkLineClear();
             checkGameOver();
             drawPiece();
-
         }
-        // fix the redundancy of creating a piece here
     }
 
     function checkLineClear() {
@@ -186,6 +184,11 @@ document.addEventListener('DOMContentLoaded', () => {
                 linesCleared += 1;
                 scoreElement.innerHTML = "Score: " + score;
                 console.log("line clear #: " + linesCleared)
+                if (linesCleared % 10 == 0 && linesCleared != 0) {
+                    console.log("levelup")
+                    level += 1;
+                    levelElement.innerHTML = "Level: " + level;
+                }         
 
                 // removing squares
                 const rowToRemove = cells.splice(i, GRID_WIDTH);
@@ -193,10 +196,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 cells.forEach(cell => grid.appendChild(cell));
             }
         }  
-        if (linesCleared % 10 == 0 && linesCleared != 0) {
-            level += 1;
-            levelElement.innerHTML = "Level: " + level;
-        }         
+
 
 
     }
@@ -270,14 +270,14 @@ document.addEventListener('DOMContentLoaded', () => {
         }
         drawPiece();
         lastDownPress = Date.now();
-        console.log(lastDownPress);
+        // console.log(lastDownPress);
     }
 
     function rotate(direction) {
         if (direction == 'clockwise') { // clockwise
             erasePiece();
             currentRotation = myModulo(currentRotation + 1, 4);
-            console.log(currentRotation);   
+            // console.log(currentRotation);   
             currentPiece = pieces[rand][currentRotation]
             drawPiece();
         }
@@ -291,7 +291,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // direct traffic of keypresses to trigger correct methods
     function keypressConfig(keypress) {
-        console.log(keypress);
+        // console.log(keypress);
         if (keypress.keyCode === 37)
             moveLeft();
         if (keypress.keyCode === 39)
