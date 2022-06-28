@@ -2,7 +2,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const GRID_WIDTH = 10;
     const GRID_HEIGHT = 20;
     const GRID_SIZE = GRID_HEIGHT * GRID_WIDTH;
-    const FALL_SPEED = 1000; // time to fall one row in ms;
+    let FALL_SPEED = 1500; // time to fall one row in ms;
     let fall = null; // set to null when stuff is not falling, use setInterval 
     let started = false; // has the game started 
     let lastDownPress; // stores last time it was pressed
@@ -11,6 +11,7 @@ document.addEventListener('DOMContentLoaded', () => {
     let scoreElement = document.querySelector('.score');
     let levelElement = document.querySelector('.level');
     let linesCleared = 0;
+    let lvlup = false;
 
 
     const grid = createGrid();
@@ -167,6 +168,11 @@ document.addEventListener('DOMContentLoaded', () => {
             checkLineClear();
             checkGameOver();
             drawPiece();
+            if (lvlup == true) {
+                fall = setInterval(FALL_SPEED);
+                lvlup = false;
+                console.log("dropping at: " + FALL_SPEED + "ms");
+            }
         }
     }
 
@@ -188,6 +194,8 @@ document.addEventListener('DOMContentLoaded', () => {
                     console.log("levelup")
                     level += 1;
                     levelElement.innerHTML = "Level: " + level;
+                    FALL_SPEED = FALL_SPEED * 0.7;
+                    lvlup = true;
                 }         
 
                 // removing squares
